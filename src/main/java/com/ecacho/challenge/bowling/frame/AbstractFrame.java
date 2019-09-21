@@ -10,8 +10,8 @@ public abstract class AbstractFrame {
     private int number;
 
     protected int MAX_PINS = 10;
-    protected int FIRST_ROLL = 0;
-    protected int SECOND_ROLL = 1;
+    protected int FIRST_ROLL = 1;
+    protected int SECOND_ROLL = 2;
 
     /**
      * Create Frame with default behavior

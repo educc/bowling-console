@@ -46,6 +46,31 @@ public class FrameTest {
     }
 
     @Test
+    public void rollsCompletedWhenStrikeTest() throws BowlingException {
+        Frame f = new Frame(1);
+        f.addRoll(10);
+
+        Assert.assertTrue("Rolls should be completed", f.isRollsCompleted());
+    }
+
+    @Test
+    public void rollsCompletedWhenSpareTest() throws BowlingException {
+        Frame f = new Frame(1);
+        f.addRoll(0);
+        f.addRoll(10);
+
+        Assert.assertTrue("Rolls should be completed", f.isRollsCompleted());
+    }
+
+    @Test
+    public void rollsNotCompletedTest() throws BowlingException {
+        Frame f = new Frame(1);
+        f.addRoll(0);
+
+        Assert.assertTrue("Rolls should be incomplete", !f.isRollsCompleted());
+    }
+
+    @Test
     public void strikeTest() throws BowlingException {
         Frame f = new Frame(1);
 

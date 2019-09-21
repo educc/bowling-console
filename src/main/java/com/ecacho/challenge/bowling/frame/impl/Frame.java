@@ -61,19 +61,19 @@ public class Frame extends AbstractFrame {
     }
 
     public boolean isSpare(){
-        if (!rolls.get(SECOND_ROLL).isPresent()){
+        if (!rolls.get(1).isPresent()){
             return false;
         }
 
-        Integer firstRoll = this.rolls.get(FIRST_ROLL).get();
-        Integer secondRoll = this.rolls.get(SECOND_ROLL).get();
+        Integer firstRoll = this.rolls.get(0).get();
+        Integer secondRoll = this.rolls.get(1).get();
         return (firstRoll + secondRoll) == MAX_PINS;
     }
 
     public boolean isStrike(){
-        if (!rolls.get(FIRST_ROLL).isPresent()){
+        if (!rolls.get(0).isPresent()){
             return false;
         }
-        return this.rolls.get(FIRST_ROLL).get() == MAX_PINS;
+        return this.rolls.get(0).get() == MAX_PINS;
     }
 }
