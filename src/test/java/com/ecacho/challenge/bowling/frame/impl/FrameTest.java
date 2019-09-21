@@ -3,10 +3,47 @@ package com.ecacho.challenge.bowling.frame.impl;
 import com.ecacho.challenge.bowling.exception.BowlingException;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
+import java.util.Optional;
 
 public class FrameTest {
+
+    @Test
+    public void pinsFromFirstRollTest() throws BowlingException {
+        Frame f = new Frame(1);
+
+        f.addRoll(5);
+
+        Assert.assertEquals("The first roll must have 5 pins",
+                f.getPinsFromRoll(1),
+                Optional.of(5));
+    }
+
+
+    @Test
+    public void pinsFromFirstAndSecondRollTest() throws BowlingException {
+        Frame f = new Frame(1);
+
+        int firstRoll = 4;
+        int secondRoll = 6;
+
+        f.addRoll(firstRoll);
+        f.addRoll(secondRoll);
+
+        Assert.assertEquals("The first roll must have " + firstRoll + " pins",
+                f.getPinsFromRoll(1),
+                Optional.of(firstRoll));
+
+
+        Assert.assertEquals("The second roll must have " + secondRoll + " pins",
+                f.getPinsFromRoll(2),
+                Optional.of(secondRoll));
+    }
+
+    @Test(expected = BowlingException.class)
+    public void addInvalidRoll() throws BowlingException {
+        Frame f = new Frame(1);
+        f.addRoll(20);
+    }
 
     @Test
     public void strikeTest() throws BowlingException {

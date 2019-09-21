@@ -1,17 +1,13 @@
 package com.ecacho.challenge.bowling.frame;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
-public class AbstractFrame {
+public abstract class AbstractFrame {
 
-    private int number;
-    protected List<Optional<Integer>> rolls;
     protected int maxRolls;
-    private Optional<Integer> score;
+    protected Optional<Integer> score;
+    private int number;
 
     protected int MAX_PINS = 10;
     protected int FIRST_ROLL = 0;
@@ -19,48 +15,30 @@ public class AbstractFrame {
 
     /**
      * Create Frame with default behavior
-     * @param number the number of the frame
-     * @param numberExtraRolls must be positive or zero
+     * @param numberOfFrame
+     * @param maxRolls
      */
-    public AbstractFrame(int number, int numberExtraRolls) {
-        this.number = number;;
-        this.maxRolls = 2 + numberExtraRolls;
+    public AbstractFrame(int numberOfFrame, int maxRolls) {
+        this.number = numberOfFrame;
+        this.maxRolls = maxRolls;
         this.score = Optional.empty();
-        this.initRolls();
     }
 
-    private void initRolls(){
-        this.rolls = new ArrayList<>();
-        for(int i = 0; i < this.maxRolls; i++){
-            this.rolls.add(Optional.empty());
+    public void validatePinsBeforeAddRoll(int pins) throws BowlingException {
+        if (pins < 0 || pins > MAX_PINS) {
+            String msg = String.format("Each roll must have between 0 to %d pins",
+                    pins);
+            throw new BowlingException(msg);
         }
     }
 
     /**
-     * Add roll to this frame
-     * @return false when this frame cannot add another roll
+     * Add roll with pins in this Frame
+     * @param pins
+     * @return
+     * @throws BowlingException when pins are invalid see validatePinsBeforeAddRoll method
      */
-    public boolean addRoll(int pins) throws BowlingException {
-        if (pins < 0 || pins > MAX_PINS) {
-            String msg = String.format("Each roll must have between 0 to %d pins",
-                pins);
-            throw new BowlingException(msg);
-        }
-
-        if (isRollsComplete()) {
-            return false;
-        }
-
-        int size = this.rolls.size();
-        for (int i = 0; i < size; i++) {
-            Optional<Integer> item = this.rolls.get(i);
-            if (!item.isPresent()) {
-                this.rolls.set(i, Optional.of(pins));
-                break;
-            }
-        }
-        return true;
-    }
+    public abstract boolean addRoll(int pins) throws BowlingException;
 
     public Optional<Integer> getScore(){
         return score;
@@ -70,29 +48,14 @@ public class AbstractFrame {
         return this.number;
     }
 
-    public boolean isFrameComplete(){
-        return isRollsComplete()
+    public boolean isFrameCompleted(){
+        return isRollsCompleted()
                 && getScore().isPresent();
     }
 
-    public boolean isRollsComplete(){
-        return isStrike() || rolls.size() == rolls.stream().filter(it -> it.isPresent()).count();
-    }
+    public abstract Optional<Integer> getPinsFromRoll(int numberOfRoll) throws BowlingException;
+    public abstract boolean isRollsCompleted();
+    public abstract boolean isSpare();
+    public abstract boolean isStrike();
 
-    public boolean isSpare(){
-        if (!rolls.get(SECOND_ROLL).isPresent()){
-            return false;
-        }
-
-        Integer firstRoll = this.rolls.get(FIRST_ROLL).get();
-        Integer secondRoll = this.rolls.get(SECOND_ROLL).get();
-        return (firstRoll + secondRoll) == MAX_PINS;
-    }
-
-    public boolean isStrike(){
-        if (!rolls.get(FIRST_ROLL).isPresent()){
-            return false;
-        }
-        return this.rolls.get(FIRST_ROLL).get() == MAX_PINS;
-    }
 }
