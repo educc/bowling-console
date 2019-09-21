@@ -32,6 +32,27 @@ public class TenPinTenthFrameImplTest {
         verifyAllRollsWereAdded(f,0, 0);
     }
 
+
+    @Test(expected = BowlingException.class)
+    public void addInvalidAtFirstRoll() throws BowlingException {
+        TenPinTenthFrameImpl f = new TenPinTenthFrameImpl();
+        f.addRoll(20);
+    }
+
+    @Test(expected = BowlingException.class)
+    public void addInvalidAtSecondRoll() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        f.addRoll(4);
+        f.addRoll(7);
+    }
+
+    @Test(expected = BowlingException.class)
+    public void addInvalidAtSecondWhenStrikeRoll() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        f.addRoll(10);
+        f.addRoll(11);
+    }
+
     private void verifyAllRollsWereAdded(AbstractFrame f, int... rolls) throws BowlingException {
         int size = rolls.length;
         for (int i = 0; i < size; i++) {
