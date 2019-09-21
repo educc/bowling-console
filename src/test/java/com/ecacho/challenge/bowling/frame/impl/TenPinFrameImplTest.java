@@ -5,11 +5,24 @@ import org.junit.Assert;
 import org.junit.Test;
 import java.util.Optional;
 
-public class FrameTest {
+public class TenPinFrameImplTest {
+
+    @Test
+    public void verifyIsCompletedRollsTest() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+
+        Assert.assertTrue("rolls must be incomplete", !f.isRollsCompleted());
+
+        f.addRoll(4);
+        Assert.assertTrue("rolls must be incomplete", !f.isRollsCompleted());
+
+        f.addRoll(4);
+        Assert.assertTrue("rolls must be completed", f.isRollsCompleted());
+    }
 
     @Test
     public void pinsFromFirstRollTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         f.addRoll(5);
 
@@ -21,7 +34,7 @@ public class FrameTest {
 
     @Test
     public void pinsFromFirstAndSecondRollTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         int firstRoll = 4;
         int secondRoll = 6;
@@ -40,14 +53,21 @@ public class FrameTest {
     }
 
     @Test(expected = BowlingException.class)
-    public void addInvalidRoll() throws BowlingException {
-        Frame f = new Frame(1);
+    public void addInvalidAtFirstRoll() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
         f.addRoll(20);
+    }
+
+    @Test(expected = BowlingException.class)
+    public void addInvalidAtSecondRoll() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        f.addRoll(4);
+        f.addRoll(7);
     }
 
     @Test
     public void rollsCompletedWhenStrikeTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
         f.addRoll(10);
 
         Assert.assertTrue("Rolls should be completed", f.isRollsCompleted());
@@ -55,7 +75,7 @@ public class FrameTest {
 
     @Test
     public void rollsCompletedWhenSpareTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
         f.addRoll(0);
         f.addRoll(10);
 
@@ -64,7 +84,7 @@ public class FrameTest {
 
     @Test
     public void rollsNotCompletedTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
         f.addRoll(0);
 
         Assert.assertTrue("Rolls should be incomplete", !f.isRollsCompleted());
@@ -72,7 +92,7 @@ public class FrameTest {
 
     @Test
     public void strikeTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         f.addRoll(10);
         Assert.assertTrue("The frame must contains a strike", f.isStrike());
@@ -81,7 +101,7 @@ public class FrameTest {
 
     @Test
     public void spareTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         f.addRoll(5);
         f.addRoll(5);
@@ -92,7 +112,7 @@ public class FrameTest {
 
     @Test
     public void noSpareTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         f.addRoll(5);
         f.addRoll(3);
@@ -103,7 +123,7 @@ public class FrameTest {
 
     @Test
     public void addRollAfterStrikeTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         boolean firstRollAdded = f.addRoll(10);
         boolean secondRollAdded = f.addRoll(1);
@@ -115,7 +135,7 @@ public class FrameTest {
 
     @Test
     public void addRollAfterSpareTest() throws BowlingException {
-        Frame f = new Frame(1);
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
 
         boolean firstRollAdded = f.addRoll(1);
         boolean secondRollAdded = f.addRoll(9);
@@ -126,5 +146,41 @@ public class FrameTest {
 
         Assert.assertTrue("The frame doesn't contains a strike", !f.isStrike());
         Assert.assertTrue("The frame doesn't contains an spare", f.isSpare());
+    }
+
+    @Test
+    public void rollsRemainingTest() {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+
+        Assert.assertEquals("Rolls remaining should be 2", 2, f.getRollsRemaining());
+    }
+
+
+    @Test
+    public void rollsRemainingOnStrikeTest() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+
+        f.addRoll(10);
+
+        Assert.assertEquals("Rolls remaining should be 0", 0, f.getRollsRemaining());
+    }
+
+    @Test
+    public void rollsRemainingOnSpareTest() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+
+        f.addRoll(5);
+        f.addRoll(5);
+
+        Assert.assertEquals("Rolls remaining should be 0", 0, f.getRollsRemaining());
+    }
+
+    @Test
+    public void rollsRemainingAfterFirstRollTest() throws BowlingException {
+        TenPinFrameImpl f = new TenPinFrameImpl(1);
+
+        f.addRoll(5);
+
+        Assert.assertEquals("Rolls remaining should be 1", 1, f.getRollsRemaining());
     }
 }

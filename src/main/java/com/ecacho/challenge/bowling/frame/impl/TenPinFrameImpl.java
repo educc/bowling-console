@@ -9,19 +9,40 @@ import java.util.Optional;
 /**
  * Default frame with only two Rolls for using as Frame 1 to Frame 9
  */
-public class Frame extends AbstractFrame {
+public class TenPinFrameImpl extends AbstractFrame {
 
     protected List<Optional<Integer>> rolls;
+    protected int MAX_PINS = 10;
 
-    public Frame(int number) {
-        super(number, 2);
+    public TenPinFrameImpl(int number) {
+        super(number);
         this.initRolls();
     }
 
     private void initRolls(){
+        int defaultMaxRolls = 2;
         this.rolls = new ArrayList<>();
-        for(int i = 0; i < this.maxRolls; i++){
+        for(int i = 0; i < defaultMaxRolls; i++){
             this.rolls.add(Optional.empty());
+        }
+    }
+
+    @Override
+    public void validatePinsBeforeAddRoll(int pins) throws BowlingException {
+        if (pins < 0 || pins > MAX_PINS) {
+            String msg = String.format("Each roll must have between 0 to %d pins",
+                    pins);
+            throw new BowlingException(msg);
+        }
+    }
+
+    protected void validateSumOfTwoFirstRolls() throws BowlingException {
+        if (this.rolls.get(0).isPresent() && this.rolls.get(1).isPresent()) {
+            int first = rolls.get(0).get();
+            int second = rolls.get(1).get();
+            if ( (first + second) > MAX_PINS) {
+                throw new BowlingException("The two first rolls for this frame sum more then 10");
+            }
         }
     }
 
@@ -44,6 +65,7 @@ public class Frame extends AbstractFrame {
                 break;
             }
         }
+        this.validateSumOfTwoFirstRolls();
         return true;
     }
 
@@ -75,5 +97,18 @@ public class Frame extends AbstractFrame {
             return false;
         }
         return this.rolls.get(0).get() == MAX_PINS;
+    }
+
+    @Override
+    public int getRollsRemaining() {
+        if (isStrike()) {
+            return 0;
+        }
+
+        if (isSpare()) {
+            return 0;
+        }
+
+        return (int)rolls.stream().filter(it -> !it.isPresent()).count();
     }
 }
