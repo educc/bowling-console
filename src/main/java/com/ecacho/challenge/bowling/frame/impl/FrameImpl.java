@@ -1,22 +1,54 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
-import com.ecacho.challenge.bowling.frame.AbstractFrame;
+import com.ecacho.challenge.bowling.frame.IFrame;
+import com.ecacho.challenge.bowling.roll.IRoll;
+import com.ecacho.challenge.bowling.roll.IRollFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Default frame with only two Rolls for using as Frame 1 to Frame 9
  */
-public class TenPinFrameImpl extends AbstractFrame {
+public class FrameImpl extends AbstractFrame implements IFrame {
 
-    protected List<Optional<Integer>> rolls;
-    protected int MAX_PINS = 10;
+    protected List<Optional<IRoll>> rolls;
+    private int numberOfFrame;
+    private IRollFactory rollFactory;
 
-    public TenPinFrameImpl(int number) {
-        super(number);
+    public FrameImpl(IRollFactory factory) {
+        this.numberOfFrame = -1;
+        this.rollFactory = factory;
         this.initRolls();
+    }
+
+    public boolean addRoll(Integer pins) throws BowlingException {
+        return addRoll(rollFactory.createRoll(pins));
+    }
+
+    public boolean addFoulRoll() throws BowlingException {
+        return addRoll(rollFactory.createFoul());
+    }
+
+    @Override
+    public int getFrameNumber() {
+        return numberOfFrame;
+    }
+
+    @Override
+    public List<IRoll> getAllRollsPlayed() {
+        return rolls
+                .stream()
+                .filter(it -> it.isPresent())
+                .map(it -> it.get())
+                .collect(Collectors.toList());
+    }
+
+    public void setNumberOfFrame(int numberOfFrame) {
+        this.numberOfFrame = numberOfFrame;
     }
 
     private void initRolls(){
@@ -27,20 +59,11 @@ public class TenPinFrameImpl extends AbstractFrame {
         }
     }
 
-    @Override
-    public void validatePinsBeforeAddRoll(int pins) throws BowlingException {
-        if (pins < 0 || pins > MAX_PINS) {
-            String msg = String.format("Each roll must have between 0 to %d pins",
-                    pins);
-            throw new BowlingException(msg);
-        }
-    }
-
     protected void validateSumOfTwoFirstRolls() throws BowlingException {
         if (this.rolls.get(0).isPresent() && this.rolls.get(1).isPresent()) {
-            int first = rolls.get(0).get();
-            int second = rolls.get(1).get();
-            if ( (first + second) > MAX_PINS) {
+            IRoll first = rolls.get(0).get();
+            IRoll second = rolls.get(1).get();
+            if ( (first.getPins() + second.getPins()) > first.getMaxPins()) {
                 throw new BowlingException("The two first rolls for this frame sum more then 10");
             }
         }
@@ -50,18 +73,16 @@ public class TenPinFrameImpl extends AbstractFrame {
      * Add roll to this frame
      * @return false when this frame cannot add another roll
      */
-    public boolean addRoll(int pins) throws BowlingException {
-        this.validatePinsBeforeAddRoll(pins);
-
+    protected boolean addRoll(IRoll roll) throws BowlingException {
         if (isRollsCompleted()) {
             return false;
         }
 
         int size = this.rolls.size();
         for (int i = 0; i < size; i++) {
-            Optional<Integer> item = this.rolls.get(i);
+            Optional<IRoll> item = this.rolls.get(i);
             if (!item.isPresent()) {
-                this.rolls.set(i, Optional.of(pins));
+                this.rolls.set(i, Optional.of(roll));
                 break;
             }
         }
@@ -70,7 +91,7 @@ public class TenPinFrameImpl extends AbstractFrame {
     }
 
     @Override
-    public Optional<Integer> getPinsFromRoll(int numberOfRoll) throws BowlingException {
+    public Optional<IRoll> getPinsFromRoll(int numberOfRoll) throws BowlingException {
         if (numberOfRoll < 1 || numberOfRoll > this.rolls.size()) {
             throw new BowlingException("Invalid number of roll for this frame");
         }
@@ -87,16 +108,17 @@ public class TenPinFrameImpl extends AbstractFrame {
             return false;
         }
 
-        Integer firstRoll = this.rolls.get(0).get();
-        Integer secondRoll = this.rolls.get(1).get();
-        return (firstRoll + secondRoll) == MAX_PINS;
+        IRoll first = this.rolls.get(0).get();
+        IRoll second = this.rolls.get(1).get();
+        return (first.getPins() + second.getPins()) == first.getMaxPins();
     }
 
     public boolean isStrike(){
         if (!rolls.get(0).isPresent()){
             return false;
         }
-        return this.rolls.get(0).get() == MAX_PINS;
+        IRoll first = this.rolls.get(0).get();
+        return first.isAllPinsKnockedDown();
     }
 
     @Override

@@ -4,4 +4,5 @@ public interface IPlayer {
 
     String getName();
     int hashCode();
+    boolean equals(Object o);
 }

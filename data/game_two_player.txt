@@ -1,0 +1,50 @@
+
+steve	0
+steve	0
+
+steve	10
+steve	10
+steve	10
+
+steve	0
+steve	0
+
+steve	0
+steve	0
+
+steve	10
+
+steve	F
+steve	5
+
+steve	8
+steve	2
+
+steve	1
+steve	9
+steve	10
+
+
+edu	10
+
+edu	F
+edu	5
+
+edu	8
+edu	2
+
+edu	4
+edu	5
+
+edu	0
+edu	0
+
+edu	10
+edu	10
+edu	10
+
+edu	0
+edu	0
+
+edu	0
+edu	0

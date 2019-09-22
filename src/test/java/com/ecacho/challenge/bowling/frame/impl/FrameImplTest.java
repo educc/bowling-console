@@ -1,15 +1,24 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
+import com.ecacho.challenge.bowling.frame.IFrameFactory;
+import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import org.junit.Assert;
 import org.junit.Test;
-import java.util.Optional;
 
-public class TenPinFrameImplTest {
+public class FrameImplTest {
+
+    IFrameFactory frameFactory;
+
+    public FrameImplTest() {
+        frameFactory = new TenPinFrameFactoryImpl(
+                new TenPinRollFactoryImpl()
+        );
+    }
 
     @Test
     public void verifyIsCompletedRollsTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         Assert.assertTrue("rolls must be incomplete", !f.isRollsCompleted());
 
@@ -22,52 +31,53 @@ public class TenPinFrameImplTest {
 
     @Test
     public void pinsFromFirstRollTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(5);
 
-        Assert.assertEquals("The first roll must have 5 pins",
-                f.getPinsFromRoll(1),
-                Optional.of(5));
+        Assert.assertSame("The first roll must have 5 pins",
+                f.getPinsFromRoll(1).get().getPins(),
+                5);
     }
 
 
     @Test
     public void pinsFromFirstAndSecondRollTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
-
-        int firstRoll = 4;
-        int secondRoll = 6;
-
-        f.addRoll(firstRoll);
-        f.addRoll(secondRoll);
-
-        Assert.assertEquals("The first roll must have " + firstRoll + " pins",
-                f.getPinsFromRoll(1),
-                Optional.of(firstRoll));
+        AbstractFrame f = frameFactory.createFirstFrame();
 
 
-        Assert.assertEquals("The second roll must have " + secondRoll + " pins",
-                f.getPinsFromRoll(2),
-                Optional.of(secondRoll));
+        Integer first = 4;
+        Integer second = 6;
+
+        f.addRoll(first);
+        f.addRoll(second);
+
+        Assert.assertSame("The first roll must have 4pins",
+                f.getPinsFromRoll(1).get().getPins(),
+                first);
+
+
+        Assert.assertSame("The second roll must have 6 pins",
+                f.getPinsFromRoll(2).get().getPins(),
+                second);
     }
 
     @Test(expected = BowlingException.class)
     public void addInvalidAtFirstRoll() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
         f.addRoll(20);
     }
 
     @Test(expected = BowlingException.class)
     public void addInvalidAtSecondRoll() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
         f.addRoll(4);
         f.addRoll(7);
     }
 
     @Test
     public void rollsCompletedWhenStrikeTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
         f.addRoll(10);
 
         Assert.assertTrue("Rolls should be completed", f.isRollsCompleted());
@@ -75,7 +85,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void rollsCompletedWhenSpareTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
         f.addRoll(0);
         f.addRoll(10);
 
@@ -84,7 +94,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void rollsNotCompletedTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
         f.addRoll(0);
 
         Assert.assertTrue("Rolls should be incomplete", !f.isRollsCompleted());
@@ -92,7 +102,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void strikeTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(10);
         Assert.assertTrue("The frame must contains a strike", f.isStrike());
@@ -101,7 +111,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void spareTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(5);
         f.addRoll(5);
@@ -112,7 +122,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void noSpareTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(5);
         f.addRoll(3);
@@ -123,7 +133,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void addRollAfterStrikeTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         boolean firstRollAdded = f.addRoll(10);
         boolean secondRollAdded = f.addRoll(1);
@@ -135,7 +145,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void addRollAfterSpareTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         boolean firstRollAdded = f.addRoll(1);
         boolean secondRollAdded = f.addRoll(9);
@@ -150,7 +160,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void rollsRemainingTest() {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         Assert.assertEquals("Rolls remaining should be 2", 2, f.getRollsRemaining());
     }
@@ -158,7 +168,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void rollsRemainingOnStrikeTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(10);
 
@@ -167,7 +177,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void rollsRemainingOnSpareTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(5);
         f.addRoll(5);
@@ -177,7 +187,7 @@ public class TenPinFrameImplTest {
 
     @Test
     public void rollsRemainingAfterFirstRollTest() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        AbstractFrame f = frameFactory.createFirstFrame();
 
         f.addRoll(5);
 

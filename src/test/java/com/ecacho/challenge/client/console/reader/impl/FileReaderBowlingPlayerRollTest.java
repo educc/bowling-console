@@ -1,5 +1,6 @@
 package com.ecacho.challenge.client.console.reader.impl;
 
+import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import com.ecacho.challenge.client.console.exception.ConsoleBowlingException;
 import com.ecacho.challenge.client.console.model.PlayerAndRoll;
 import org.junit.Test;
@@ -9,7 +10,6 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class FileReaderBowlingPlayerRollTest {
-
 
     @Test
     public void fileOkTest() throws ConsoleBowlingException {
@@ -37,6 +37,8 @@ public class FileReaderBowlingPlayerRollTest {
     private FileReaderBowlingPlayerRoll createReader(String filename){
         ClassLoader classLoader = getClass().getClassLoader();
         String path = classLoader.getResource(filename).getPath();
-        return new FileReaderBowlingPlayerRoll(path);
+
+        FileReaderBowlingPlayerRoll reader = new FileReaderBowlingPlayerRoll(path);
+        return reader;
     }
 }

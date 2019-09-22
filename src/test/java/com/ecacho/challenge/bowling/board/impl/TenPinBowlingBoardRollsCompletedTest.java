@@ -3,6 +3,8 @@ package com.ecacho.challenge.bowling.board.impl;
 import com.ecacho.challenge.bowling.board.IBowlingBoard;
 import com.ecacho.challenge.bowling.board.IBowlingBoardFactory;
 import com.ecacho.challenge.bowling.exception.BowlingException;
+import com.ecacho.challenge.bowling.frame.impl.TenPinFrameFactoryImpl;
+import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import com.ecacho.challenge.utils.BowlingBoardUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,8 +15,16 @@ import java.util.stream.IntStream;
 public class TenPinBowlingBoardRollsCompletedTest {
 
 
-    IBowlingBoardFactory factory = new TenPinBowlingBoardFactoryImpl();
+    IBowlingBoardFactory factory;
     IBowlingBoard board;
+
+    public TenPinBowlingBoardRollsCompletedTest() {
+        factory = new TenPinBowlingBoardFactoryImpl(
+                new TenPinFrameFactoryImpl(
+                        new TenPinRollFactoryImpl()
+                )
+        );
+    }
 
     @Test
     public void twentyRollsTest() throws BowlingException {

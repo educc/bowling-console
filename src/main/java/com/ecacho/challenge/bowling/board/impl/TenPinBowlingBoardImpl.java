@@ -2,12 +2,14 @@ package com.ecacho.challenge.bowling.board.impl;
 
 import com.ecacho.challenge.bowling.board.IBowlingBoard;
 import com.ecacho.challenge.bowling.exception.BowlingException;
-import com.ecacho.challenge.bowling.frame.AbstractFrame;
+import com.ecacho.challenge.bowling.frame.IFrame;
+import com.ecacho.challenge.bowling.frame.impl.AbstractFrame;
 import com.ecacho.challenge.bowling.frame.IFrameFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class TenPinBowlingBoardImpl implements IBowlingBoard {
 
@@ -44,13 +46,29 @@ public class TenPinBowlingBoardImpl implements IBowlingBoard {
     }
 
     @Override
-    public void addRoll(int pin) throws BowlingException {
+    public void addRoll(Integer pins) throws BowlingException {
         Optional<AbstractFrame> last = getLastFrameForAddRoll();
         if (!last.isPresent()) {
             throw new BowlingException("All rolls were completed");
         }
+        last.get().addRoll(pins);
+    }
 
-        last.get().addRoll(pin);
+    @Override
+    public void addFoulRoll() throws BowlingException {
+        Optional<AbstractFrame> last = getLastFrameForAddRoll();
+        if (!last.isPresent()) {
+            throw new BowlingException("All rolls were completed");
+        }
+        last.get().addFoulRoll();
+    }
+
+    @Override
+    public List<IFrame> getAllFrames() {
+        return this.frames
+                .stream()
+                .map(it -> (IFrame) it)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,54 +1,58 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
-import com.ecacho.challenge.bowling.frame.AbstractFrame;
+import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class TenPinTenthFrameImplTest {
 
+    private TenthFrameImpl createTenthFrame(){
+        return new TenthFrameImpl(new TenPinRollFactoryImpl());
+    }
+
     @Test
     public void perfectStrikeTest() throws BowlingException {
-        TenPinTenthFrameImpl f = new TenPinTenthFrameImpl();
-        verifyAllRollsWereAdded(f,10, 10, 10);
+        TenthFrameImpl f = createTenthFrame();
+        verifyAllRollsWereAdded(f, 10, 10, 10);
     }
 
     @Test
     public void strikeTest() throws BowlingException {
-        TenPinTenthFrameImpl f = new TenPinTenthFrameImpl();
+        TenthFrameImpl f = createTenthFrame();
         verifyAllRollsWereAdded(f,10, 4, 6);
     }
 
     @Test
     public void spareTest() throws BowlingException {
-        TenPinTenthFrameImpl f = new TenPinTenthFrameImpl();
+        TenthFrameImpl f = createTenthFrame();
         verifyAllRollsWereAdded(f,5, 5, 10);
     }
 
     @Test
     public void foulTest() throws BowlingException {
-        TenPinTenthFrameImpl f = new TenPinTenthFrameImpl();
-        verifyAllRollsWereAdded(f,0, 0);
+        TenthFrameImpl f = createTenthFrame();
+        verifyAllRollsWereAdded(f, 0, 0);
     }
 
 
     @Test(expected = BowlingException.class)
     public void addInvalidAtFirstRoll() throws BowlingException {
-        TenPinTenthFrameImpl f = new TenPinTenthFrameImpl();
+        TenthFrameImpl f = createTenthFrame();
         f.addRoll(20);
     }
 
     @Test(expected = BowlingException.class)
     public void addInvalidAtSecondRoll() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        TenthFrameImpl f = createTenthFrame();
         f.addRoll(4);
         f.addRoll(7);
     }
 
     @Test(expected = BowlingException.class)
     public void addInvalidAtSecondWhenStrikeRoll() throws BowlingException {
-        TenPinFrameImpl f = new TenPinFrameImpl(1);
+        TenthFrameImpl f = createTenthFrame();
         f.addRoll(10);
         f.addRoll(11);
     }

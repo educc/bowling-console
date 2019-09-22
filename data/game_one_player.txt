@@ -1,0 +1,23 @@
+edu	10
+
+edu	F
+edu	5
+
+edu	8
+edu	2
+
+edu	4
+edu	5
+
+edu	0
+edu	0
+
+edu	10
+edu	10
+edu	10
+
+edu	0
+edu	0
+
+edu	0
+edu	0

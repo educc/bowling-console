@@ -1,9 +1,14 @@
 package com.ecacho.challenge.client.console.reader.impl;
 
+import com.ecacho.challenge.bowling.exception.BowlingException;
+import com.ecacho.challenge.bowling.game.IBowlingGame;
+import com.ecacho.challenge.bowling.roll.IRoll;
+import com.ecacho.challenge.bowling.roll.IRollFactory;
 import com.ecacho.challenge.client.console.exception.ConsoleBowlingException;
 import com.ecacho.challenge.client.console.model.PlayerAndRoll;
 import com.ecacho.challenge.client.console.player.SimplePlayer;
 import com.ecacho.challenge.client.console.reader.IReaderBowlingPlayerRoll;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,14 +25,16 @@ public class FileReaderBowlingPlayerRoll implements IReaderBowlingPlayerRoll {
     Pattern patternLine;
     Pattern patternPlayerName;
     Pattern patternPlayerRoll;
+    Pattern patternFoulRoll;
+
 
     public FileReaderBowlingPlayerRoll(String filename) {
         this.filename = filename;
-        this.patternLine = Pattern.compile("[a-zA-Z]+\\t\\d+$");
+        this.patternLine = Pattern.compile("^[a-zA-Z]+\\t(\\d+|F)$");
         this.patternPlayerName = Pattern.compile("[a-zA-Z]+");
         this.patternPlayerRoll = Pattern.compile("\\d+");
+        this.patternFoulRoll = Pattern.compile("F$");
     }
-
 
     private void validateLine(String line) throws ConsoleBowlingException {
         Matcher matcher = patternLine.matcher(line);
@@ -39,8 +46,33 @@ public class FileReaderBowlingPlayerRoll implements IReaderBowlingPlayerRoll {
     private PlayerAndRoll parseLine(String line) throws ConsoleBowlingException {
         validateLine(line);
         String playerName = findByPattern(patternPlayerName, line);
-        Integer roll = Integer.valueOf(findByPattern(patternPlayerRoll, line));
-        return new PlayerAndRoll(new SimplePlayer(playerName), roll);
+
+        String rollStr = findByPattern(patternPlayerRoll, line);
+        String foulStr = findByPattern(patternFoulRoll, line);
+
+        PlayerAndRoll playerAndRoll = null;
+
+        if (rollStr != null) {
+            playerAndRoll = new PlayerAndRoll(
+                    new SimplePlayer(playerName),
+                    Integer.valueOf(rollStr),
+                    false
+            );
+        }
+
+        if (foulStr != null) {
+            playerAndRoll = new PlayerAndRoll(
+                    new SimplePlayer(playerName),
+                    0,
+                    true
+            );
+        }
+
+        if (playerAndRoll == null) {
+            throw new ConsoleBowlingException("Doesn't find a roll valid in this line: " + line);
+        }
+
+        return playerAndRoll;
     }
 
     private String findByPattern(Pattern pattern, String str){
@@ -52,7 +84,6 @@ public class FileReaderBowlingPlayerRoll implements IReaderBowlingPlayerRoll {
         return null;
     }
 
-    @Override
     public List<PlayerAndRoll> readAll() throws ConsoleBowlingException {
         List<PlayerAndRoll> result = new LinkedList<>();
 
@@ -61,7 +92,6 @@ public class FileReaderBowlingPlayerRoll implements IReaderBowlingPlayerRoll {
 
             String line;
             while ((line = br.readLine()) != null) {
-                line = line.trim();
                 if (line.isEmpty()) {
                     continue;
                 }
@@ -73,5 +103,23 @@ public class FileReaderBowlingPlayerRoll implements IReaderBowlingPlayerRoll {
             throw new ConsoleBowlingException("Error at read the file: " + filename);
         }
         return result;
+    }
+
+    @Override
+    public void addAllPlayersRollToBowlingGame(IBowlingGame game) throws ConsoleBowlingException {
+
+        try {
+            for(PlayerAndRoll item: readAll()) {
+                if (item.isFoul()) {
+                        game.addPlayerFoulRoll(item.getPlayer());
+                } else {
+                    game.addPlayerRoll(item.getPlayer(), item.getRoll());
+                }
+            }
+
+        } catch (BowlingException e) {
+            e.printStackTrace();
+            throw new ConsoleBowlingException(e.getMessage());
+        }
     }
 }

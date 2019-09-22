@@ -1,18 +1,22 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
+import com.ecacho.challenge.bowling.roll.IRoll;
+import com.ecacho.challenge.bowling.roll.IRollFactory;
 
 import java.util.Optional;
 
-public class TenPinTenthFrameImpl extends TenPinFrameImpl {
+public class TenthFrameImpl extends FrameImpl {
 
-    public TenPinTenthFrameImpl() {
-        super(10);
+    IRollFactory rollFactory;
+
+    public TenthFrameImpl(IRollFactory rollFactory) {
+        super(rollFactory);
     }
 
     @Override
-    public boolean addRoll(int pins) throws BowlingException {
-        boolean canAdd = super.addRoll(pins);
+    public boolean addRoll(IRoll roll) throws BowlingException {
+        boolean canAdd = super.addRoll(roll);
 
         if (isStrike() || isSpare()) {
             if (this.rolls.size() <= 2) {
