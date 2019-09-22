@@ -2,6 +2,7 @@ package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
 import com.ecacho.challenge.bowling.frame.IFrame;
+import com.ecacho.challenge.bowling.frame.calculate_score.IScoreCalculate;
 import com.ecacho.challenge.bowling.roll.IRoll;
 import com.ecacho.challenge.bowling.roll.IRollFactory;
 
@@ -19,7 +20,8 @@ public class FrameImpl extends AbstractFrame implements IFrame {
     private int numberOfFrame;
     private IRollFactory rollFactory;
 
-    public FrameImpl(IRollFactory factory) {
+    public FrameImpl(IRollFactory factory, IScoreCalculate scoreCalculate) {
+        super(scoreCalculate);
         this.numberOfFrame = -1;
         this.rollFactory = factory;
         this.initRolls();
@@ -87,6 +89,7 @@ public class FrameImpl extends AbstractFrame implements IFrame {
             }
         }
         this.validateSumOfTwoFirstRolls();
+        this.calculateAnsSetScore();
         return true;
     }
 
@@ -132,5 +135,12 @@ public class FrameImpl extends AbstractFrame implements IFrame {
         }
 
         return (int)rolls.stream().filter(it -> !it.isPresent()).count();
+    }
+
+    @Override
+    public void calculateAnsSetScore() {
+        if (!getScore().isPresent()) {
+            this.scoreCalculate.calculateAndSetScore(this);
+        }
     }
 }

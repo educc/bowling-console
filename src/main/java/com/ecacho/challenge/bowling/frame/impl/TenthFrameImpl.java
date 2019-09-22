@@ -1,6 +1,7 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
+import com.ecacho.challenge.bowling.frame.calculate_score.IScoreCalculate;
 import com.ecacho.challenge.bowling.roll.IRoll;
 import com.ecacho.challenge.bowling.roll.IRollFactory;
 
@@ -8,10 +9,8 @@ import java.util.Optional;
 
 public class TenthFrameImpl extends FrameImpl {
 
-    IRollFactory rollFactory;
-
-    public TenthFrameImpl(IRollFactory rollFactory) {
-        super(rollFactory);
+    public TenthFrameImpl(IRollFactory factory, IScoreCalculate scoreCalculate) {
+        super(factory, scoreCalculate);
     }
 
     @Override
@@ -42,5 +41,10 @@ public class TenthFrameImpl extends FrameImpl {
         if (!isStrike()) {
             super.validateSumOfTwoFirstRolls();
         }
+    }
+
+    @Override
+    public void calculateAnsSetScore() {
+        this.scoreCalculate.calculateAndSetScore(this);
     }
 }

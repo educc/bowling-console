@@ -3,6 +3,8 @@ package com.ecacho.challenge.bowling.board.impl;
 import com.ecacho.challenge.bowling.board.IBowlingBoard;
 import com.ecacho.challenge.bowling.board.IBowlingBoardFactory;
 import com.ecacho.challenge.bowling.exception.BowlingException;
+import com.ecacho.challenge.bowling.frame.calculate_score.impl.TenPinFrameScoreCalculateImpl;
+import com.ecacho.challenge.bowling.frame.calculate_score.impl.TenPinTenthFrameScoreCalculateImpl;
 import com.ecacho.challenge.bowling.frame.impl.TenPinFrameFactoryImpl;
 import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import com.ecacho.challenge.utils.BowlingBoardUtils;
@@ -21,7 +23,9 @@ public class TenPinBowlingBoardRollsCompletedTest {
     public TenPinBowlingBoardRollsCompletedTest() {
         factory = new TenPinBowlingBoardFactoryImpl(
                 new TenPinFrameFactoryImpl(
-                        new TenPinRollFactoryImpl()
+                        new TenPinRollFactoryImpl(),
+                        new TenPinFrameScoreCalculateImpl(),
+                        new TenPinTenthFrameScoreCalculateImpl()
                 )
         );
     }

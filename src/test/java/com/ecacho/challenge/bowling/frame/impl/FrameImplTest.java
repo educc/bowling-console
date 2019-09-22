@@ -2,6 +2,8 @@ package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
 import com.ecacho.challenge.bowling.frame.IFrameFactory;
+import com.ecacho.challenge.bowling.frame.calculate_score.impl.TenPinFrameScoreCalculateImpl;
+import com.ecacho.challenge.bowling.frame.calculate_score.impl.TenPinTenthFrameScoreCalculateImpl;
 import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,7 +14,9 @@ public class FrameImplTest {
 
     public FrameImplTest() {
         frameFactory = new TenPinFrameFactoryImpl(
-                new TenPinRollFactoryImpl()
+                new TenPinRollFactoryImpl(),
+                new TenPinFrameScoreCalculateImpl(),
+                new TenPinTenthFrameScoreCalculateImpl()
         );
     }
 

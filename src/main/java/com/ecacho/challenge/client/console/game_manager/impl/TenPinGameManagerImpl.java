@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.System.console;
 import static java.lang.System.out;
 
 @Service
@@ -30,7 +31,7 @@ public class TenPinGameManagerImpl implements IGameManager {
     public void printAllPlayersScore(IReaderBowlingPlayerRoll reader) throws ConsoleBowlingException {
 
         reader.addAllPlayersRollToBowlingGame(bowlingGame);
-        //TODO: print all result here
+
         Map<IPlayer, IBowlingBoard> mapScoreboards = bowlingGame.getAllPlayersScoreboard();
         for (IPlayer player : mapScoreboards.keySet()){
             IBowlingBoard scoreboard = mapScoreboards.get(player);
@@ -43,40 +44,49 @@ public class TenPinGameManagerImpl implements IGameManager {
     }
 
     private void printScore(IBowlingBoard board) {
-        out.print("Score\t\t");
+        StringBuilder sb = new StringBuilder("Score\t\t");
 
-        out.println();
+        for (IFrame frame : board.getAllFrames()) {
+            Optional<Integer> score = frame.getScore();
+            if (score.isPresent()) {
+                sb.append(score.get());
+            }
+            sb.append("\t\t");
+        }
+
+        out.println(sb.toString().trim());
     }
 
     private void printPinfall(IBowlingBoard board) {
-        out.print("Pinfalls\t");
+        StringBuilder sb = new StringBuilder("Pinfalls\t");
+
         for(IFrame frame: board.getAllFrames()) {
             List<IRoll> allRollsPlayed = frame.getAllRollsPlayed();
             int size = allRollsPlayed.size();
             if (size == 1) {
-                out.print("\t");
+                sb.append("\t");
             }
 
-            boolean first = true;
+            int count = 1;
             for(IRoll roll: allRollsPlayed){
                 if (roll.isFoul()) {
-                    out.print("F");
+                    sb.append("F");
                 } else {
                     if (roll.isAllPinsKnockedDown()) {
-                        out.print("X");
+                        sb.append("X");
                     } else {
-                        if (!first && frame.isSpare()) {
-                            out.print("/");
+                        if (count == 2 && frame.isSpare()) {
+                            sb.append("/");
                         } else {
-                            out.print(roll.getPins());
+                            sb.append(roll.getPins());
                         }
                     }
                 }
-                out.print("\t");
-                first = false;
+                sb.append("\t");
+                count++;
             }
         }
-        out.println();
+        out.println(sb.toString().trim());
     }
 
     private void printPlayer(IPlayer player){
@@ -84,11 +94,12 @@ public class TenPinGameManagerImpl implements IGameManager {
     }
 
     private void printFrameNumbers(IBowlingBoard board) {
-        out.print("Frame\t\t");
+        StringBuilder sb = new StringBuilder("Frame\t\t");
+
         for(IFrame frame: board.getAllFrames()) {
-            out.print(frame.getFrameNumber());
-            out.print("\t\t");
+            sb.append(frame.getFrameNumber());
+            sb.append("\t\t");
         }
-        out.println();
+        out.println(sb.toString().trim());
     }
 }

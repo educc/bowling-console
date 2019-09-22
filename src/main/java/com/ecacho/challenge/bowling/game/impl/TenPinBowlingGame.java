@@ -5,8 +5,6 @@ import com.ecacho.challenge.bowling.board.IBowlingBoardFactory;
 import com.ecacho.challenge.bowling.exception.BowlingException;
 import com.ecacho.challenge.bowling.game.IBowlingGame;
 import com.ecacho.challenge.bowling.player.IPlayer;
-import com.ecacho.challenge.bowling.roll.IRoll;
-import com.ecacho.challenge.bowling.roll.IRollFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 

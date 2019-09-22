@@ -1,6 +1,7 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.frame.IFrameFactory;
+import com.ecacho.challenge.bowling.frame.calculate_score.IScoreCalculate;
 import com.ecacho.challenge.bowling.roll.IRollFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -9,14 +10,21 @@ import org.springframework.stereotype.Component;
 public class TenPinFrameFactoryImpl implements IFrameFactory {
 
     IRollFactory tenPinRollFactory;
+    IScoreCalculate scoreCalcForNormalFrame;
+    IScoreCalculate scoreCalcForLastFrame;
 
-    public TenPinFrameFactoryImpl(@Qualifier("TenPinRollFactory") IRollFactory tenPinRollFactory) {
+    public TenPinFrameFactoryImpl(
+            @Qualifier("TenPinRollFactory") IRollFactory tenPinRollFactory,
+            @Qualifier("TenPinFrameScoreCalculate") IScoreCalculate scoreCalcForNormalFrame,
+            @Qualifier("TenPinTenthFrameScoreCalculate") IScoreCalculate scoreCalcForLastFrame) {
         this.tenPinRollFactory = tenPinRollFactory;
+        this.scoreCalcForNormalFrame = scoreCalcForNormalFrame;
+        this.scoreCalcForLastFrame = scoreCalcForLastFrame;
     }
 
     @Override
     public AbstractFrame createFirstFrame() {
-        FrameImpl frame = new FrameImpl(tenPinRollFactory);
+        FrameImpl frame = new FrameImpl(tenPinRollFactory, scoreCalcForNormalFrame);
         frame.setNumberOfFrame(1);
         return frame;
     }
@@ -25,12 +33,26 @@ public class TenPinFrameFactoryImpl implements IFrameFactory {
     public AbstractFrame createNextFrame(AbstractFrame lastFrame) {
         int numberOfFrame = lastFrame.getFrameNumber();
         if (numberOfFrame >= 9) {
-            TenthFrameImpl tenthFrame = new TenthFrameImpl(tenPinRollFactory);
+            //create new frame
+            TenthFrameImpl tenthFrame = new TenthFrameImpl(tenPinRollFactory, scoreCalcForLastFrame);
             tenthFrame.setNumberOfFrame(numberOfFrame+1);
+            tenthFrame.setPreviousFrame(lastFrame);
+
+            //set next frame
+            lastFrame.setNextFrame(tenthFrame);
+
             return tenthFrame;
         }
-        FrameImpl frame = new FrameImpl(tenPinRollFactory);
+
+        //create new frame
+        FrameImpl frame = new FrameImpl(tenPinRollFactory, scoreCalcForNormalFrame);
         frame.setNumberOfFrame(numberOfFrame+1);
+        frame.setPreviousFrame(lastFrame);
+
+        //set next frame
+        lastFrame.setNextFrame(frame);
+
         return frame;
     }
+
 }
