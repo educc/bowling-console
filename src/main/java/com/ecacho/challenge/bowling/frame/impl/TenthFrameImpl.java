@@ -1,7 +1,7 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
-import com.ecacho.challenge.bowling.frame.calculate_score.IScoreCalculate;
+import com.ecacho.challenge.bowling.frame.calculatescore.IScoreCalculate;
 import com.ecacho.challenge.bowling.roll.IRoll;
 import com.ecacho.challenge.bowling.roll.IRollFactory;
 

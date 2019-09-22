@@ -1,7 +1,7 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.frame.IFrameFactory;
-import com.ecacho.challenge.bowling.frame.calculate_score.IScoreCalculate;
+import com.ecacho.challenge.bowling.frame.calculatescore.IScoreCalculate;
 import com.ecacho.challenge.bowling.roll.IRollFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.ecacho.challenge.client.console.game_manager;
+package com.ecacho.challenge.client.console.gamemanager;
 
 import com.ecacho.challenge.client.console.exception.ConsoleBowlingException;
 import com.ecacho.challenge.client.console.reader.IReaderBowlingPlayerRoll;

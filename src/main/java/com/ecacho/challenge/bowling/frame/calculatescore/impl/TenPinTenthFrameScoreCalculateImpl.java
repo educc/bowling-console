@@ -1,4 +1,4 @@
-package com.ecacho.challenge.bowling.frame.calculate_score.impl;
+package com.ecacho.challenge.bowling.frame.calculatescore.impl;
 
 import com.ecacho.challenge.bowling.frame.impl.AbstractFrame;
 import org.springframework.stereotype.Component;

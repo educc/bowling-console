@@ -1,8 +1,7 @@
 package com.ecacho.challenge;
 
 import com.ecacho.challenge.client.console.exception.ConsoleBowlingException;
-import com.ecacho.challenge.client.console.game_manager.IGameManager;
-import com.ecacho.challenge.client.console.game_manager.impl.TenPinGameManagerImpl;
+import com.ecacho.challenge.client.console.gamemanager.IGameManager;
 import com.ecacho.challenge.client.console.reader.impl.FileReaderBowlingPlayerRoll;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;

@@ -1,7 +1,7 @@
 package com.ecacho.challenge.bowling.frame.impl;
 
 import com.ecacho.challenge.bowling.exception.BowlingException;
-import com.ecacho.challenge.bowling.frame.calculate_score.impl.TenPinTenthFrameScoreCalculateImpl;
+import com.ecacho.challenge.bowling.frame.calculatescore.impl.TenPinTenthFrameScoreCalculateImpl;
 import com.ecacho.challenge.bowling.roll.impl.TenPinRollFactoryImpl;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.ecacho.challenge.client.console.game_manager.impl;
+package com.ecacho.challenge.client.console.gamemanager.impl;
 
 import com.ecacho.challenge.bowling.board.IBowlingBoard;
 import com.ecacho.challenge.bowling.frame.IFrame;
@@ -6,7 +6,7 @@ import com.ecacho.challenge.bowling.game.IBowlingGame;
 import com.ecacho.challenge.bowling.player.IPlayer;
 import com.ecacho.challenge.bowling.roll.IRoll;
 import com.ecacho.challenge.client.console.exception.ConsoleBowlingException;
-import com.ecacho.challenge.client.console.game_manager.IGameManager;
+import com.ecacho.challenge.client.console.gamemanager.IGameManager;
 import com.ecacho.challenge.client.console.reader.IReaderBowlingPlayerRoll;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.lang.System.console;
 import static java.lang.System.out;
 
 @Service
