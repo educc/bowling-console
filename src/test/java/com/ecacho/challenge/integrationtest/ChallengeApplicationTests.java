@@ -64,10 +64,24 @@ public class ChallengeApplicationTests {
         runner.run ( "./data/game_two_player.txt");
 
         Map<String, Integer> usersAndScore = BowlingAppParser.findUsersAndScore(outputCapture.toString());
-        Assert.assertEquals("The user doesn't have 0 score",
+        Assert.assertEquals("The user doesn't have 170 score",
                 Integer.valueOf(170), usersAndScore.get("you"));
-        Assert.assertEquals("The user doesn't have 0 score",
+        Assert.assertEquals("The user doesn't have 50 score",
                 Integer.valueOf(50), usersAndScore.get("edu"));
+    }
+
+    @Test
+    public void threePlayerGameTest() throws Exception {
+        CommandLineRunner runner = ctx.getBean(CommandLineRunner.class);
+        runner.run ( "./data/game_three_player.txt");
+
+        Map<String, Integer> usersAndScore = BowlingAppParser.findUsersAndScore(outputCapture.toString());
+        Assert.assertEquals("The user doesn't have 170 score",
+                Integer.valueOf(170), usersAndScore.get("you"));
+        Assert.assertEquals("The user doesn't have 50 score",
+                Integer.valueOf(50), usersAndScore.get("edu"));
+        Assert.assertEquals("The user doesn't have 300 score",
+                Integer.valueOf(300), usersAndScore.get("lee"));
     }
 
     @Test
@@ -76,7 +90,7 @@ public class ChallengeApplicationTests {
         runner.run ( "./data/game_one_player.txt");
 
         Map<String, Integer> usersAndScore = BowlingAppParser.findUsersAndScore(outputCapture.toString());
-        Assert.assertEquals("The user doesn't have 0 score",
+        Assert.assertEquals("The user doesn't have 103 score",
                 Integer.valueOf(103), usersAndScore.get("edu"));
     }
 
