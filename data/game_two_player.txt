@@ -1,50 +1,50 @@
+you	8
+you	2
 
-steve	0
-steve	0
+edu	2
+edu	3
 
-steve	10
-steve	10
-steve	10
+you	7
+you	3
 
-steve	0
-steve	0
+edu	1
+edu	4
 
-steve	0
-steve	0
+you	3
+you	4
 
-steve	10
+edu	3
+edu	2
 
-steve	F
-steve	5
-
-steve	8
-steve	2
-
-steve	1
-steve	9
-steve	10
-
-
-edu	10
+you	10
 
 edu	F
 edu	5
 
-edu	8
-edu	2
+you	2
+you	8
+edu	5
+edu	F
 
-edu	4
+you	10
+you	10
+edu	0
 edu	5
 
-edu	0
-edu	0
-
-edu	10
-edu	10
-edu	10
-
-edu	0
+you	8
+you	F
+edu	5
 edu	0
 
-edu	0
+you	10
+edu	4
+edu	1
+
+you	8
+you	2
+you	9
+edu	2
+edu	3
+
+edu	5
 edu	0
