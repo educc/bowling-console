@@ -1,11 +1,19 @@
 # Requirements
 - JDK 8
+- Set JAVA_HOME environment variable
 
 # How to compile
 Execute the follow commands:
+
+Linux
 ```
 cd [this_folder_repo]
 ./mvnw clean install
+```
+Windows
+```
+cd [this_folder_repo]
+mvnw clean install
 ```
 # How to run
 Execute the follow commands after compiling:
